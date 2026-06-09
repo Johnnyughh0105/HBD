@@ -1,13 +1,1461 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happiest Birthday, Babi! 🌸</title>
+  
+  <!-- Tailwind CSS & Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Comfortaa:wght@400;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+            display: ["Comfortaa", "sans-serif"],
+            handwritten: ["Caveat", "cursive"],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Continuous floating aesthetic animations */
+    @keyframes sway_left {
+      0%, 100% { transform: rotate(-5deg); }
+      50% { transform: rotate(5deg); }
+    }
+    @keyframes sway_right {
+      0%, 100% { transform: rotate(5deg); }
+      50% { transform: rotate(-5deg); }
+    }
+    @keyframes gentle_pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    @keyframes float_petal {
+      0% {
+        transform: translateY(-10vh) translateX(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% { opacity: 0.6; }
+      25% { transform: translateY(20vh) translateX(25px) rotate(45deg); }
+      50% { transform: translateY(50vh) translateX(-25px) rotate(110deg); }
+      75% { transform: translateY(80vh) translateX(35px) rotate(210deg); }
+      90% { opacity: 0.6; }
+      100% {
+        transform: translateY(110vh) translateX(5px) rotate(320deg);
+        opacity: 0;
+      }
+    }
+    @keyframes bounce_subtle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .animate-sway-left {
+      animation: sway_left 4s ease-in-out infinite;
+      transform-origin: bottom center;
+    }
+    .animate-sway-right {
+      animation: sway_right 4.5s ease-in-out infinite;
+      transform-origin: bottom center;
+    }
+    .animate-gentle-pulse {
+      animation: gentle_pulse 2.5s ease-in-out infinite;
+    }
+    .animate-petal {
+      animation: float_petal 12s linear infinite;
+    }
+    .animate-bounce-subtle {
+      animation: bounce_subtle 2s ease-in-out infinite;
+    }
+
+    /* Custom elegant pink scrollbar */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(180, 62, 80, 0.25);
+      border-radius: 999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(180, 62, 80, 0.45);
+    }
+    
+    html, body {
+      overscroll-behavior: none;
+    }
+  </style>
+</head>
+<body class="relative min-h-screen w-full overflow-x-hidden bg-gradient-to-br from-[#ffe5ec] via-[#fff5f6] to-[#fefaf6] font-sans antialiased text-[#800f2f] select-none">
+
+  <!-- Interactive Sparkles Container -->
+  <div id="particles-container" class="fixed inset-0 pointer-events-none z-30"></div>
+
+  <!-- Ambient Falling Tulip Petals -->
+  <div id="falling-petals-layer" class="fixed inset-0 pointer-events-none z-10 overflow-hidden"></div>
+
+  <!-- Music Sound Control Bar -->
+  <div class="fixed top-4 right-4 z-50 flex items-center gap-x-2">
+    <button
+      onclick="toggleManualMusic()"
+      id="music-toggle-btn"
+      class="flex items-center gap-x-2 px-4 py-2 rounded-full border text-xs font-semibold backdrop-blur-md transition-all duration-300 shadow-md bg-white/80 text-rose-500 border-rose-200 cursor-pointer hover:scale-105 active:scale-95"
+    >
+      <svg id="music-icon-muted" class="w-4 h-4 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M23 9l-6 6M17 9l6 6" stroke-linecap="round"/>
+      </svg>
+      <svg id="music-icon-playing" class="w-4 h-4 text-[#ff4d6d] hidden animate-spin" style="animation-duration: 4s;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14" stroke-linecap="round"/>
+      </svg>
+      <span id="music-btn-text" class="font-bold tracking-wide">Music Silent</span>
+    </button>
+  </div>
+
+  <!-- ==================== SCREEN 1: LOCKED ENVELOPE SEED ==================== -->
+  <main id="screen-1" class="flex flex-col items-center justify-center min-h-screen w-full px-4 pt-16 pb-20 overflow-visible relative z-20 transition-all duration-700">
+    
+    <!-- Recipient Name Header Section -->
+    <div class="text-center z-40 relative mb-8">
+      <h1 class="font-handwritten text-5xl md:text-6xl font-bold text-[#b43e50] tracking-wide relative inline-block">
+        hi <span class="baby-name-placeholder">baby</span>!
+        <!-- Edit name badge control -->
+        <button 
+          onclick="toggleEditName(true)" 
+          class="absolute -right-8 top-1 text-slate-400 hover:text-[#b43e50] p-1 transition-colors rounded-full hover:bg-[#b43e50]/5 cursor-pointer"
+          title="Customize Name"
+        >
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/>
+          </svg>
+        </button>
+      </h1>
+    </div>
+
+    <!-- Envelope Wrapper Area -->
+    <div class="relative w-full max-w-sm flex items-center justify-center z-20 min-h-[300px]" onclick="spawnTouchSparkle(event)">
+      
+      <!-- Vector Tulip Blossoms swaying dynamically behind the letter -->
+      <div class="absolute inset-0 -z-10 flex items-center justify-center">
+        <!-- Soft Rose Tulip Left -->
+        <svg class="absolute bottom-16 -left-12 -rotate-12 animate-sway-left w-14 h-20" viewBox="0 0 120 180" fill="none">
+          <path d="M60 180 Q55 120 60 70" stroke="#7aa78f" stroke-width="4.5" stroke-linecap="round"/>
+          <path d="M57 145 C40 135 25 105 38 82 C45 98 54 118 58 130" fill="#7aa78f" fill-opacity="0.85"/>
+          <path d="M60 72 C42 72 35 32 52 24 C60 38 60 48 60 72" fill="#ff758f"/>
+        </svg>
+        
+        <!-- Soft Pink Tulip Left-Center -->
+        <svg class="absolute bottom-22 left-2 -rotate-6 animate-sway-right w-12 h-18" viewBox="0 0 100 160" fill="none">
+          <path d="M50 160 Q55 110 50 63" stroke="#82b396" stroke-width="4" stroke-linecap="round"/>
+          <path d="M50 64 C34 64 28 25 44 15 C50 28 50 38 50 64" fill="#ffa6c9"/>
+        </svg>
+
+        <!-- Golden Yellow Tulip Right-Center -->
+        <svg class="absolute bottom-20 -right-12 rotate-12 animate-sway-left w-14 h-20" viewBox="0 0 110 170" fill="none">
+          <path d="M55 170 Q48 115 55 65" stroke="#74a887" stroke-width="4.2" stroke-linecap="round"/>
+          <path d="M55 67 C35 67 30 25 48 18 C55 32 55 42 55 67" fill="#ffd166"/>
+        </svg>
+
+        <!-- Main Ruby Tulip Center -->
+        <svg class="absolute bottom-10 left-1/2 -translate-x-1/2 rotate-0 animate-sway-right w-16 h-22 scale-105" viewBox="0 0 120 180" fill="none">
+          <path d="M60 180 Q55 120 60 70" stroke="#7aa78f" stroke-width="4.5" stroke-linecap="round"/>
+          <path d="M60 72 C42 72 35 32 52 24 C60 38 60 48 60 72" fill="#ff4d6d"/>
+        </svg>
+      </div>
+
+      <!-- Main Interactive Envelope Box -->
+      <div 
+        id="digital-envelope" 
+        onclick="triggerEnvelopeOpen()" 
+        class="relative w-80 h-52 md:w-88 md:h-58 rounded-2xl shadow-2xl border border-[#dcbba0]/20 overflow-visible transition-transform duration-300 hover:scale-[1.03] cursor-pointer"
+        style="perspective: 1000px;"
+      >
+        
+        <!-- Inside Sliding Card Secret Preview -->
+        <div id="sliding-letter-preview" class="absolute inset-x-6 top-6 bottom-6 bg-zinc-50 rounded-lg shadow-md border-t-4 border-rose-400 p-4 opacity-0 scale-75 z-10 flex flex-col justify-between">
+          <div class="w-16 h-1 bg-rose-200 mx-auto rounded"></div>
+          <div class="space-y-1.5 flex-1 flex flex-col justify-center my-2">
+            <div class="w-full h-2 bg-slate-200/60 rounded"></div>
+            <div class="w-4/5 h-2 bg-slate-200/60 rounded mx-auto"></div>
+            <div class="w-11/12 h-2 bg-slate-200/60 rounded mx-auto"></div>
+          </div>
+          <p class="text-xs text-center font-handwritten text-[#b43e50] font-semibold tracking-wider">
+            Opening magical letter...
+          </p>
+        </div>
+
+        <!-- Upper Flap Folder -->
+        <div class="absolute top-0 left-0 right-0 h-1/2 overflow-visible z-20 envelope-top-half" style="transform-origin: top center;">
+          <svg class="w-full h-full drop-shadow-sm" viewBox="0 0 352 116" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 0 L176 116 L352 0 Z" fill="#dbbea4" stroke="#cca98d" stroke-width="0.8" />
+          </svg>
+        </div>
+
+        <!-- Pocket Bottom Half -->
+        <div class="absolute inset-0 z-15 envelope-bottom-half" style="transform-origin: bottom center;">
+          <div class="absolute inset-0 bg-[#edd3bb] rounded-2xl overflow-hidden z-0 border border-[#dcbba0]/40">
+            <div class="absolute top-0 w-full h-1/2 bg-[#ebd1b9]"></div>
+          </div>
+          <div class="absolute inset-0 bg-transparent overflow-hidden rounded-2xl pointer-events-none z-10">
+            <svg class="absolute bottom-0 w-full h-full" viewBox="0 0 352 232" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 232 L176 128 L0 0 Z" fill="#edd5be" />
+              <path d="M352 232 L176 128 L352 0 Z" fill="#edd5be" />
+              <path d="M0 232 L176 118 L352 232 Z" fill="#e5cca8" stroke="#d5bba1" stroke-width="0.8" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Heart Seal Lock Element -->
+        <div id="heart-seal" class="absolute inset-0 flex items-center justify-center z-30 pointer-events-none">
+          <div class="relative group flex flex-col items-center">
+            <div class="absolute w-14 h-14 bg-rose-500 rounded-full blur-md opacity-35 group-hover:scale-135 transition-transform duration-300"></div>
+            <div class="relative p-3 bg-white rounded-full shadow-lg border border-rose-100 flex items-center justify-center">
+              <svg class="w-8 h-8 fill-red-500 text-red-500 animate-gentle-pulse" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+              <!-- Padlock Status Tag -->
+              <div id="lock-badge" class="absolute -top-1.5 -right-1.5 bg-[#800f2f] text-white p-1 rounded-full text-[8.5px] border border-rose-200 shadow-sm leading-none flex items-center justify-center font-bold">
+                🔒
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Small Instructions Banner -->
+    <div class="text-center z-20 mt-6 select-none h-12">
+      <p class="text-xl font-handwritten font-bold text-[#b43e50] tracking-wide scale-105 transition-transform">
+        got a mail for you &lt;3
+      </p>
+      <span id="envelope-prompt-text" class="text-[10px] text-rose-500 font-bold block mt-1 tracking-widest uppercase">
+        envelope is locked • view countdown below
+      </span>
+    </div>
+
+    <!-- Live Countdown Mirror Card -->
+    <div id="countdown-clock-card" class="mt-8 bg-white/60 backdrop-blur-md rounded-2xl p-5 shadow-lg border border-rose-200/60 max-w-sm w-full mx-auto text-center z-20 select-none">
+      <div id="countdown-banner" class="flex items-center justify-center gap-x-1.5 text-[11px] font-bold text-[#a4133c] uppercase tracking-wider mb-3">
+        <span>🔒 locked until June 26, 2026</span>
+      </div>
+      
+      <div class="flex justify-center items-center gap-x-2.5">
+        <div class="flex flex-col items-center bg-white/90 rounded-xl py-1.5 px-3 shadow-sm min-w-[56px] border border-rose-100/50">
+          <span id="clock-days" class="font-sans text-xl font-black text-[#ff4d6d]">00</span>
+          <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Days</span>
+        </div>
+        <span class="text-[#ff4d6d]/60 font-black text-lg animate-pulse">:</span>
+        
+        <div class="flex flex-col items-center bg-white/90 rounded-xl py-1.5 px-3 shadow-sm min-w-[56px] border border-rose-100/50">
+          <span id="clock-hours" class="font-sans text-xl font-black text-[#ff4d6d]">00</span>
+          <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Hours</span>
+        </div>
+        <span class="text-[#ff4d6d]/60 font-black text-lg animate-pulse">:</span>
+        
+        <div class="flex flex-col items-center bg-white/90 rounded-xl py-1.5 px-3 shadow-sm min-w-[56px] border border-rose-100/50">
+          <span id="clock-minutes" class="font-sans text-xl font-black text-[#ff4d6d]">00</span>
+          <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Mins</span>
+        </div>
+        <span class="text-[#ff4d6d]/60 font-black text-lg animate-pulse">:</span>
+        
+        <div class="flex flex-col items-center bg-white/90 rounded-xl py-1.5 px-3 shadow-sm min-w-[56px] border border-rose-100/50">
+          <span id="clock-seconds" class="font-sans text-xl font-black text-[#ff4d6d]">00</span>
+          <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Secs</span>
+        </div>
+      </div>
+      
+      <!-- Developer Bypass Notification when in preview URL mode -->
+      <div id="developer-bypass-hint" class="hidden mt-3 text-[10px] text-emerald-600 bg-emerald-50 border border-emerald-100 py-1 px-2.5 rounded-lg font-bold uppercase tracking-wider">
+        ⚡ Preview Mode Active (Lock Bypassed)
+      </div>
+    </div>
+
+    <!-- Layout Base Footer -->
+    <p class="text-[9px] text-[#ff4d6d]/40 tracking-widest uppercase mt-12 pointer-events-none select-none z-10 text-center">
+      Made with Love • 2026
+    </p>
+  </main>
+
+
+  <!-- ==================== SCREEN 2: MAIN BIRTHDAY CANVAS ==================== -->
+  <main id="screen-2" class="hidden opacity-0 scale-95 flex flex-col items-center justify-start min-h-screen w-full pt-20 pb-16 px-4 md:pt-24 md:pb-20 relative z-20 transition-all duration-700">
+    
+    <!-- Stylized 4-Corner Decorative Tulips -->
+    <!-- Top-Left corner -->
+    <div class="absolute top-0 left-0 p-3 opacity-50 sm:opacity-75 pointer-events-none transform -rotate-12 z-20">
+      <div class="flex gap-x-0.5">
+        <svg class="w-12 h-18 sm:w-16 sm:h-24 animate-sway-left" viewBox="0 0 120 180" fill="none">
+          <path d="M60 180 Q55 120 60 70" stroke="#7aa78f" stroke-width="4"/><path d="M60 72 C42 72 35 32 52 24 C60 38 60 48 60 72" fill="#ff758f"/>
+        </svg>
+        <svg class="w-9 h-14 sm:w-12 sm:h-18 animate-sway-right -ml-4" viewBox="0 0 110 170" fill="none">
+          <path d="M55 170 Q48 115 55 65" stroke="#74a887" stroke-width="4"/><path d="M55 67 C35 67 30 25 48 18 C55 32 55 42 55 67" fill="#fbcfe8"/>
+        </svg>
+      </div>
+    </div>
+    <!-- Top-Right corner -->
+    <div class="absolute top-0 right-0 p-3 opacity-50 sm:opacity-75 pointer-events-none transform rotate-12 z-20">
+      <div class="flex gap-x-0.5 scale-x-[-1]">
+        <svg class="w-12 h-18 sm:w-16 sm:h-24 animate-sway-left" viewBox="0 0 120 180" fill="none">
+          <path d="M60 180 Q55 120 60 70" stroke="#7aa78f" stroke-width="4"/><path d="M60 72 C42 72 35 32 52 24 C60 38 60 48 60 72" fill="#ffa6c9"/>
+        </svg>
+        <svg class="w-9 h-14 sm:w-12 sm:h-18 animate-sway-right -ml-4" viewBox="0 0 110 170" fill="none">
+          <path d="M55 170 Q48 115 55 65" stroke="#74a887" stroke-width="4"/><path d="M55 67 C35 67 30 25 48 18 C55 32 55 42 55 67" fill="#fcf08a"/>
+        </svg>
+      </div>
+    </div>
+    <!-- Bottom-Left corner -->
+    <div class="absolute bottom-0 left-0 p-3 sm:p-5 opacity-60 sm:opacity-85 pointer-events-none z-20">
+      <div class="flex items-end">
+        <svg class="w-14 h-22 sm:w-20 sm:h-30 animate-sway-left" viewBox="0 0 120 180" fill="none">
+          <path d="M60 180 Q55 120 60 70" stroke="#7aa78f" stroke-width="4"/><path d="M60 72 C42 72 35 32 52 24 C60 38 60 48 60 72" fill="#ff3b60"/>
+        </svg>
+        <svg class="w-10 h-16 sm:w-14 sm:h-22 animate-sway-right -ml-4" viewBox="0 0 110 170" fill="none">
+          <path d="M55 170 Q48 115 55 65" stroke="#74a887" stroke-width="4"/><path d="M55 67 C35 67 30 25 48 18 C55 32 55 42 55 67" fill="#ffa6c9"/>
+        </svg>
+      </div>
+    </div>
+    <!-- Bottom-Right corner -->
+    <div class="absolute bottom-0 right-0 p-3 sm:p-5 opacity-60 sm:opacity-85 pointer-events-none z-20">
+      <div class="flex items-end scale-x-[-1]">
+        <svg class="w-14 h-22 sm:w-20 sm:h-30 animate-sway-left" viewBox="0 0 120 180" fill="none">
+          <path d="M60 180 Q55 120 60 70" stroke="#7aa78f" stroke-width="4"/><path d="M60 72 C42 72 35 32 52 24 C60 38 60 48 60 72" fill="#ff3b60"/>
+        </svg>
+        <svg class="w-10 h-16 sm:w-14 sm:h-22 animate-sway-right -ml-4" viewBox="0 0 110 170" fill="none">
+          <path d="M55 170 Q48 115 55 65" stroke="#74a887" stroke-width="4"/><path d="M55 67 C35 67 30 25 48 18 C55 32 55 42 55 67" fill="#ffd166"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- MAIN CENTRAL EXPERIENTIAL CONTAINER -->
+    <div class="relative w-full max-w-2xl flex flex-col items-center text-center z-30" onclick="spawnTouchSparkle(event)">
+      
+      <!-- Interactive Miniature Birthday Cake -->
+      <div class="mb-5 flex flex-col items-center">
+        <svg 
+          onclick="toggleCandleFlame()" 
+          id="birthday-cake-svg"
+          class="w-16 h-16 animate-gentle-pulse drop-shadow-md select-none cursor-pointer" 
+          viewBox="0 0 100 100" 
+          fill="none" 
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <radialGradient id="flameGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.8" />
+            <stop offset="50%" stop-color="#ef4444" stop-opacity="0.35" />
+            <stop offset="100%" stop-color="#fecdd3" stop-opacity="0" />
+          </radialGradient>
+          
+          <!-- Platter Stand -->
+          <path d="M15 85 H85 C88 85 90 87 90 90 C90 91 89 92 87 92 H13 C11 92 10 91 10 90 C10 87 12 85 15 85Z" fill="#e2e8f0" />
+          <path d="M45 92 H55 V96 C55 97 54 98 53 98 H47 C46 98 45 97 45 96 V92Z" fill="#cbd5e1" />
+          
+          <!-- Cake Layers -->
+          <rect x="22" y="52" width="56" height="33" rx="5" fill="#fecdd3" />
+          <path d="M22 62 C22 66 26 66 27 62 C28 58 31 58 32 62 C33 66 37 66 38 62 C39 58 42 58 43 62 C44 66 48 66 49 62 C50 58 53 58 54 62 C55 66 59 66 60 62 V52 H22 V62Z" fill="#f43f5e" />
+          
+          <!-- Cream toppings -->
+          <circle cx="27" cy="50" r="3.5" fill="#ffffff" /><circle cx="38" cy="50" r="3.5" fill="#ffffff" /><circle cx="50" cy="50" r="3.5" fill="#ffffff" /><circle cx="62" cy="50" r="3.5" fill="#ffffff" /><circle cx="73" cy="50" r="3.5" fill="#ffffff" />
+          
+          <!-- Candle pillar -->
+          <rect x="47" y="26" width="6" height="24" rx="2" fill="#fda4af" />
+          <path d="M47 43 L53 40 M47 36 L53 33 M47 29 L53 26" stroke="#fb7185" stroke-width="1.5" />
+          
+          <!-- Real-time Interactive Candle Flame Group -->
+          <g id="candle-flame-group" class="transition-all duration-300">
+            <circle cx="50" cy="18" r="14" fill="url(#flameGlow)" class="animate-pulse" />
+            <path d="M50 8 C52.5 14 55 20 50 25 C45 20 47.5 14 50 8Z" fill="#f59e0b" />
+            <path d="M50 13 C51.5 17 53 20 50 23 C47 20 48.5 17 50 13Z" fill="#ef4444" />
+          </g>
+        </svg>
+
+        <p id="candle-tap-hint" class="text-[10px] text-rose-500/80 font-bold leading-tight mt-2 select-none">
+          🎂 Tap the cake to blow out the candle!
+        </p>
+        
+        <!-- Birthday wish banner triggered on blow -->
+        <div id="wish-banner" class="hidden mt-2 select-none">
+          <span class="text-xs font-extrabold text-[#b43e50] animate-bounce tracking-wide bg-amber-100/70 border border-amber-200 px-4 py-1.5 rounded-full shadow-sm block">
+            ✨ Babi, Make a Wish! ✨
+          </span>
+          <button 
+            onclick="relightCandleFlame(event)"
+            class="text-[10px] font-bold text-rose-400 hover:text-rose-500 underline mt-1 cursor-pointer"
+          >
+            Relight Candle 🕯
+          </button>
+        </div>
+      </div>
+
+      <!-- Polaroid Framing Box with Optional Photograph Upload -->
+      <div class="relative group mb-5 max-w-xs" id="birthday-portrait-frame">
+        <div class="absolute inset-0 rounded-full bg-gradient-to-r from-pink-400 via-rose-500 to-indigo-400 blur-xl opacity-45 group-hover:opacity-75 transition-opacity duration-300 -z-10 animate-pulse"></div>
+        
+        <!-- Circular Polaroid frame border -->
+        <div class="w-40 h-40 sm:w-44 sm:h-44 rounded-full p-2.5 bg-gradient-to-br from-white/95 to-white/70 shadow-2xl flex items-center justify-center overflow-hidden border-2 border-white/40 backdrop-blur-sm relative">
+          <div class="relative w-full h-full rounded-full overflow-hidden bg-slate-100 flex items-center justify-center border border-slate-200/50">
+            
+            <!-- Standard Vector Cozy Bunnies illustrations (Placeholder) -->
+            <div id="bunny-illustration-container" class="w-full h-full text-[#ffccd5] flex items-center justify-center">
+              <svg viewBox="0 0 200 200" class="w-full h-full" fill="currentColor">
+                <circle cx="100" cy="100" r="95" fill="#ebf2ff" />
+                <path d="M0 160 Q60 142 120 165 T200 155 V200 H0 Z" fill="#b9cbfa" />
+                <!-- Left Cute Bunny -->
+                <g transform="translate(42, 85)">
+                  <ellipse cx="23" cy="20" rx="5" ry="15" fill="#ffffff" transform="rotate(-15 23 20)" />
+                  <ellipse cx="23" cy="20" rx="2" ry="10" fill="#ffb3c1" transform="rotate(-15 23 20)" />
+                  <ellipse cx="37" cy="22" rx="5" ry="15" fill="#ffffff" transform="rotate(10 37 22)" />
+                  <ellipse cx="30" cy="65" rx="18" ry="22" fill="#ffffff" />
+                  <circle cx="30" cy="40" r="15" fill="#ffffff" />
+                  <circle cx="25" cy="38" r="1.5" fill="#3b3b3b" /><circle cx="35" cy="38" r="1.5" fill="#3b3b3b" />
+                  <circle cx="21" cy="42" r="2.5" fill="#ff9eb5" /><circle cx="39" cy="42" r="2.5" fill="#ff9eb5" />
+                  <path d="M22 27 L38 27 L30 11 Z" fill="#ff758f" />
+                </g>
+                <!-- Right Cute Bunny -->
+                <g transform="translate(94, 85)">
+                  <ellipse cx="23" cy="22" rx="5" ry="15" fill="#ffffff" transform="rotate(-10 23 22)" />
+                  <ellipse cx="37" cy="20" rx="5" ry="15" fill="#ffffff" transform="rotate(15 37 20)" />
+                  <ellipse cx="37" cy="20" rx="2" ry="10" fill="#ffb3c1" transform="rotate(15 37 20)" />
+                  <ellipse cx="30" cy="65" rx="18" ry="22" fill="#ffffff" />
+                  <circle cx="30" cy="40" r="15" fill="#ffffff" />
+                  <circle cx="25" cy="38" r="1.5" fill="#3b3b3b" /><circle cx="35" cy="38" r="1.5" fill="#3b3b3b" />
+                  <circle cx="21" cy="42" r="2.5" fill="#ff9eb5" /><circle cx="39" cy="42" r="2.5" fill="#ff9eb5" />
+                  <path d="M22 27 L38 27 L30 11 Z" fill="#3a82ef" />
+                </g>
+                <path d="M100 65 L96 60 C89 54 82 61 87 67 L100 78 L113 67 C118 61 111 54 104 60 Z" fill="#ff385c" />
+              </svg>
+            </div>
+
+            <!-- Uploaded Photograph container (Persistent in local storage) -->
+            <img 
+              id="uploaded-celebrant-image" 
+              src="" 
+              alt="Birthday Celebrant" 
+              class="w-full h-full object-cover hidden"
+            />
+
+            <!-- Photo Upload Hover Menu Overlay -->
+            <label class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white text-[11px] font-semibold tracking-wider cursor-pointer transition-opacity duration-200 select-none">
+              <svg class="w-5 h-5 mb-1 text-pink-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                <circle cx="12" cy="13" r="4"/>
+              </svg>
+              <span>Upload Photo</span>
+              <input 
+                type="file" 
+                id="photo-uploader-input" 
+                accept="image/*" 
+                class="hidden"
+              />
+            </label>
+
+          </div>
+        </div>
+
+        <!-- Reset Image Button (Restores illustration) -->
+        <button
+          onclick="clearCustomPhoto(event)"
+          id="photo-reset-btn"
+          class="absolute -top-1 -right-1 p-1.5 bg-rose-500 hover:bg-rose-600 text-white rounded-full shadow-lg border border-white/20 select-none hidden hover:scale-115 active:scale-85 transition-all text-xs cursor-pointer"
+          title="Reset to illustration"
+        >
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Main Birthday Typography Header -->
+      <div class="mb-6 px-2">
+        <h1 class="font-display font-black text-3xl sm:text-4xl text-[#800f2f] tracking-wide leading-tight drop-shadow-sm select-none">
+          happiest birthday <span class="baby-name-placeholder">baby</span>!
+        </h1>
+        <div class="w-20 h-0.5 bg-rose-300 mx-auto rounded-full mt-3 opacity-75"></div>
+      </div>
+
+      <!-- SEQUENTIAL TYPEWRITER CARD MESSAGE -->
+      <div class="relative w-full bg-white/70 border border-rose-200/60 rounded-2xl md:rounded-3xl shadow-xl overflow-hidden backdrop-blur-md">
+        <!-- Rainbow theme gradient track top border -->
+        <div class="w-full h-1 bg-gradient-to-r from-pink-400 via-rose-500 to-yellow-300 opacity-80"></div>
+        
+        <div class="relative w-full overflow-hidden">
+          <div 
+            id="typewriter-parent-scroller"
+            class="p-6 pb-20 sm:p-8 sm:pb-24 md:p-10 md:pb-28 text-left max-h-[400px] overflow-y-auto custom-scrollbar select-text leading-relaxed text-[#5c0620] font-sans space-y-6 text-sm sm:text-[15px] break-words"
+          >
+            <!-- Typewritten paragraph inserts placed dynamically inside here -->
+            <div id="sequential-typewriter-container" class="space-y-6"></div>
+            
+            <div class="h-6 w-full"></div>
+          </div>
+
+          <!-- Skip writing command block floating at bottom center -->
+          <div id="skip-typing-btn" class="absolute bottom-4 left-1/2 -translate-x-1/2 z-40">
+            <button
+              onclick="skipTypewriter()"
+              class="px-4 py-1.5 bg-white/95 hover:bg-rose-55 border border-rose-200 text-[#b43e50] font-extrabold text-[10px] rounded-full shadow-md hover:shadow-lg active:scale-95 transition-all flex items-center gap-x-1.5 uppercase tracking-wider cursor-pointer select-none"
+            >
+              <span>Skip Typing</span>
+              <svg class="w-3.5 h-3.5 text-pink-400 fill-current" viewBox="0 0 24 24">
+                <path d="M12 3v18M3 12h18m-3-6L6 18M6 18l12-12"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="h-4 bg-gradient-to-t from-rose-100/30 to-transparent pointer-events-none"></div>
+      </div>
+
+      <!-- Action buttons Bottom tray layout -->
+      <div class="w-full flex flex-wrap items-center justify-center gap-3 mt-6 select-none">
+        
+        <!-- Recieve Birthday blessing wishes button -->
+        <button
+          onclick="receiveGiftWish()"
+          class="flex items-center gap-x-1.5 px-4 py-2.5 rounded-full bg-white/80 hover:bg-rose-100/50 border border-rose-200 text-xs text-[#800f2f] font-semibold shadow-md transition-all duration-200 hover:scale-[1.03] cursor-pointer"
+        >
+          <svg class="w-3.5 h-3.5 text-pink-500 fill-current" viewBox="0 0 24 24">
+            <path d="M20 12v10H4V12H0V8h24v4h-4zM12 2C8 2 6 5 6 6c0 1.5 1.5 2 3 2s3-2 3-2 1.5 2 3 2 3-.5 3-2c0-1-2-4-6-4z"/>
+          </svg>
+          <span>Receive Gift Wish</span>
+        </button>
+
+        <!-- Close back to original envelope view -->
+        <button
+          onclick="showEnvelopeAgain()"
+          class="flex items-center gap-x-1.5 px-4 py-2.5 rounded-full bg-white/50 hover:bg-rose-100/30 border border-rose-200/50 text-xs text-[#a4133c] hover:text-[#800f2f] font-semibold transition-all duration-200 hover:scale-[1.03] cursor-pointer"
+        >
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M2.5 2v6h6M2.5 8a10 10 0 1 1 5.75 8.24"/>
+          </svg>
+          <span>Show Envelope Again</span>
+        </button>
+
+      </div>
+
+      <!-- Floating Drawer showing random sweet affirmations -->
+      <div id="compliment-drawer-box" class="mt-6 p-4 w-full max-w-md bg-white text-slate-800 rounded-xl shadow-2xl border border-rose-100 hidden items-start gap-x-3.5 text-left relative z-40 transform transition-all duration-300">
+        <div class="p-2 bg-pink-100 text-pink-500 rounded-lg shrink-0">
+          <svg class="w-5 h-5 animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 3v18M3 12h18m-3-6L6 18M6 6l12 12" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="space-y-1">
+          <h4 class="text-xs font-bold text-rose-500 uppercase tracking-widest font-display">Special Birthday Blessing</h4>
+          <p id="compliment-text" class="text-sm font-medium leading-relaxed text-slate-700"></p>
+        </div>
+        <button
+          onclick="closeComplimentDrawer()"
+          class="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-full absolute top-2 right-2 hover:bg-slate-100 cursor-pointer"
+        >
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+        <span class="absolute bottom-2 right-3 text-[10px] text-pink-300 font-mono">
+          Wishes unlocked: <span id="wishes-count">0</span>
+        </span>
+      </div>
+
+    </div>
+
+    <!-- Permanent Screen 2 Canvas Footer -->
+    <p class="text-[10px] text-[#ff4d6d]/40 tracking-widest uppercase mt-12 pointer-events-none select-none text-center">
+      Made with Love • 2026
+    </p>
+
+  </main>
+
+
+  <!-- ==================== DIALOG BOX MODALS ==================== -->
+  
+  <!-- 1. Padlock Time-Lock Warning Modal -->
+  <div id="lock-modal-dialog" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <!-- Backdrop Blur overlay -->
+    <div onclick="closeLockModal()" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"></div>
+    
+    <!-- dialog pop container -->
+    <div class="relative w-full max-w-sm bg-gradient-to-b from-[#fffbfb] via-[#fff5f6] to-[#fffbfb] border-2 border-rose-200/80 rounded-3xl p-6 shadow-2xl text-center select-none z-10 scale-95 transition-transform duration-300">
+      <div class="w-14 h-14 bg-[#ffccd5]/50 border border-rose-300 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl animate-bounce">
+        🔒
+      </div>
+      
+      <h3 class="text-[#800f2f] text-lg font-bold mb-3 font-display">Excited much? ❤️</h3>
+      
+      <p class="text-[#a4133c] text-[14px] leading-relaxed font-semibold bg-rose-100/30 p-4 rounded-2xl border border-rose-200/50 mb-5 text-center">
+        "Oops! Bawal pa buksan, masyado kang excited! ❤️ Babalik ka rito sa June 26, 2026, ha?"
+      </p>
+
+      <!-- Live statistics countdown inside modal -->
+      <div class="grid grid-cols-4 gap-2 mb-5">
+        <div class="bg-white/85 rounded-xl py-1.5 shadow-sm border border-rose-100">
+          <div class="text-lg font-black text-rose-500 font-sans modal-clock-days">00</div>
+          <div class="text-[8px] text-slate-400 font-extrabold uppercase tracking-widest">Days</div>
+        </div>
+        <div class="bg-white/85 rounded-xl py-1.5 shadow-sm border border-rose-100">
+          <div class="text-lg font-black text-rose-500 font-sans modal-clock-hours">00</div>
+          <div class="text-[8px] text-slate-400 font-extrabold uppercase tracking-widest">Hrs</div>
+        </div>
+        <div class="bg-white/85 rounded-xl py-1.5 shadow-sm border border-rose-100">
+          <div class="text-lg font-black text-rose-500 font-sans modal-clock-minutes">00</div>
+          <div class="text-[8px] text-slate-400 font-extrabold uppercase tracking-widest">Mins</div>
+        </div>
+        <div class="bg-white/85 rounded-xl py-1.5 shadow-sm border border-rose-100">
+          <div class="text-lg font-black text-rose-500 font-sans modal-clock-seconds">00</div>
+          <div class="text-[8px] text-slate-400 font-extrabold uppercase tracking-widest">Secs</div>
+        </div>
+      </div>
+
+      <button
+        onclick="closeLockModal()"
+        class="w-full py-2.5 px-4 bg-gradient-to-r from-pink-500 to-[#ff4d6d] hover:brightness-[1.03] active:scale-[0.98] text-white font-bold rounded-full shadow-md text-xs transition-all tracking-wider cursor-pointer"
+      >
+        Sige po, babalik ako! 🌸
+      </button>
+    </div>
+  </div>
+
+
+  <!-- 2. Customizable Sweet Name Edit Dialog -->
+  <div id="edit-name-overlay" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <!-- Backdrop dismiss overlay -->
+    <div onclick="toggleEditName(false)" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"></div>
+    
+    <!-- Field card -->
+    <div class="relative w-full max-w-xs bg-white border border-rose-200 rounded-2xl p-5 shadow-2xl text-center z-10">
+      <h4 class="text-xs font-bold text-rose-500 uppercase tracking-widest font-display mb-3">Customize Sweet Name</h4>
+      
+      <div class="flex items-center gap-x-2 bg-rose-50/50 p-2 rounded-xl border border-rose-100 mb-4">
+        <input 
+          type="text" 
+          id="name-input-field" 
+          maxlength="16"
+          placeholder="Enter custom nickname"
+          class="w-full px-2.5 py-1 text-sm bg-transparent border-b border-rose-200 focus:border-rose-500 focus:outline-none text-slate-800 font-medium"
+        />
+      </div>
+
+      <div class="flex gap-x-2">
+        <button 
+          onclick="toggleEditName(false)"
+          class="w-1/2 py-2 border border-slate-200 text-slate-500 text-xs font-bold rounded-xl hover:bg-slate-50 transition-colors cursor-pointer"
+        >
+          Cancel
+        </button>
+        <button 
+          onclick="saveCustomName()"
+          class="w-1/2 py-2 bg-[#ff4d6d] text-white text-xs font-bold rounded-xl hover:bg-rose-600 transition-colors cursor-pointer shadow-sm shadow-[#ff4d6d]/40"
+        >
+          Apply Name
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==================== VANILLA JAVASCRIPT ANIMATIONS & SEQUENCERS ==================== -->
+  <script>
+    // --- REALTIME TIME-LOCK DATABASE SETTINGS ---
+    // Target date set in June 26, 2026, 00:00:00 Local/UTC Time
+    const targetDate = new Date("2026-06-26T00:00:00");
+    let isBypassed = false;
+
+    // Direct Bypass Link param option checking
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("preview") === "true") {
+      isBypassed = true;
+      const devHint = document.getElementById("developer-bypass-hint");
+      if (devHint) devHint.classList.remove("hidden");
+    }
+
+    // Recover Customizable Name from localStorage
+    let babyName = localStorage.getItem("birthday_baby_name_v2") || "baby";
+    
+    // Recover Customizable Image from localStorage
+    let loadedPhoto = localStorage.getItem("birthday_baby_photo_v2") || null;
+
+    // Countdown loop calculation logic
+    function updateCountdown() {
+      const now = new Date();
+      const diff = targetDate.getTime() - now.getTime();
+      const envelopePrompt = document.getElementById('envelope-prompt-text');
+      const lockBadge = document.getElementById('lock-badge');
+      
+      if (diff <= 0 || isBypassed) {
+        // Countdown completed (UNLOCKED state)
+        const clockCard = document.getElementById('countdown-clock-card');
+        
+        // Hide the clock display completely in bypassed mode, only keep the custom unlock confirmation
+        if (clockCard) {
+          if (isBypassed) {
+            // Keep card, but clear counts
+            document.querySelectorAll('#clock-days, #clock-hours, #clock-minutes, #clock-seconds').forEach(el => el.textContent = '00');
+          } else {
+            clockCard.style.display = 'none';
+          }
+        }
+        if (envelopePrompt) envelopePrompt.textContent = "tap heart to unfold";
+        if (lockBadge) lockBadge.style.display = 'none';
+        
+        const countdownBanner = document.getElementById('countdown-banner');
+        if (countdownBanner) {
+          countdownBanner.innerHTML = "<span>🎁 Unfolded & Ready for you!</span>";
+          countdownBanner.classList.replace('text-[#a4133c]', 'text-emerald-600');
+        }
+        return true; // UNLOCKED
+      } else {
+        // Locked State
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+
+        // Populate Dashboard Countdown
+        document.getElementById('clock-days').textContent = String(days).padStart(2, '0');
+        document.getElementById('clock-hours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('clock-minutes').textContent = String(minutes).padStart(2, '0');
+        document.getElementById('clock-seconds').textContent = String(seconds).padStart(2, '0');
+
+        // Populate Lock Pop-up Countdown
+        document.querySelectorAll('.modal-clock-days').forEach(el => el.textContent = String(days).padStart(2, '0'));
+        document.querySelectorAll('.modal-clock-hours').forEach(el => el.textContent = String(hours).padStart(2, '0'));
+        document.querySelectorAll('.modal-clock-minutes').forEach(el => el.textContent = String(minutes).padStart(2, '0'));
+        document.querySelectorAll('.modal-clock-seconds').forEach(el => el.textContent = String(seconds).padStart(2, '0'));
+
+        if (envelopePrompt) envelopePrompt.textContent = "envelope is locked • view countdown below";
+        if (lockBadge) lockBadge.style.display = 'flex';
+        return false; // LOCKED
+      }
+    }
+
+    // Run Ticker loops
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+
+    // --- LOAD PLACEHOLDERS ---
+    function initPlaceholders() {
+      // populate nickname
+      document.querySelectorAll('.baby-name-placeholder').forEach(el => {
+        el.textContent = babyName;
+      });
+      
+      const uploadedImg = document.getElementById('uploaded-celebrant-image');
+      const bunnyIllo = document.getElementById('bunny-illustration-container');
+      const resetBtn = document.getElementById('photo-reset-btn');
+      
+      if (loadedPhoto) {
+        uploadedImg.src = loadedPhoto;
+        uploadedImg.classList.remove('hidden');
+        bunnyIllo.classList.add('hidden');
+        resetBtn.classList.remove('hidden');
+      } else {
+        uploadedImg.classList.add('hidden');
+        bunnyIllo.classList.remove('hidden');
+        resetBtn.classList.add('hidden');
+      }
+    }
+    initPlaceholders();
+
+
+    // --- PARTICLES SPARK PHYSICS ENGINE ---
+    const particlesContainer = document.getElementById('particles-container');
+    let activeParticles = [];
+
+    function spawnParticles(x, y, count = 12, isConfetti = false) {
+      const colors = isConfetti 
+        ? ["#ff0055", "#ff73aa", "#ffff66", "#39ff14", "#00f0ff", "#ffd166", "#ff007f"]
+        : ["#ff4d6d", "#ff758f", "#ffccd5", "#ff85a1", "#ffd166"];
+        
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        p.className = 'absolute pointer-events-none z-30 transform -translate-x-1/2 -translate-y-1/2';
+        
+        const angle = isConfetti 
+          ? (Math.PI * 1.15) + Math.random() * (Math.PI * 0.7) // upwards explosive spray
+          : Math.random() * Math.PI * 2;
+        const speed = isConfetti ? 4.5 + Math.random() * 8.5 : 1.5 + Math.random() * 4;
+        const size = isConfetti ? 7 + Math.random() * 9 : 8 + Math.random() * 12;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        
+        p.style.left = `${x}px`;
+        p.style.top = `${y}px`;
+        p.style.width = `${size}px`;
+        p.style.height = isConfetti ? `${size * 1.4}px` : `${size}px`;
+        p.style.opacity = '1';
+        
+        if (isConfetti) {
+          p.style.backgroundColor = color;
+          p.style.borderRadius = "2px";
+        } else {
+          p.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="currentColor" style="color: ${color}; width: 100%; height: 100%;">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+          `;
+        }
+        
+        particlesContainer.appendChild(p);
+        
+        activeParticles.push({
+          el: p,
+          x: x,
+          y: y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - (isConfetti ? 1.5 : 0.8),
+          size: size,
+          isConfetti: isConfetti,
+          rotation: isConfetti ? Math.random() * 360 : 0,
+          rotationSpeed: isConfetti ? (Math.random() - 0.5) * 16 : 0,
+          opacity: 1
+        });
+      }
+    }
+
+    function updateParticles() {
+      activeParticles = activeParticles.filter(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += p.isConfetti ? 0.18 : 0.1; // gravity
+        p.size *= p.isConfetti ? 0.985 : 0.96; // shrink
+        p.opacity -= 0.012;
+        
+        if (p.isConfetti) {
+          p.rotation += p.rotationSpeed;
+          p.el.style.transform = `translate(-50%, -50%) rotate(${p.rotation}deg)`;
+        } else {
+          p.el.style.transform = `translate(-50%, -50%)`;
+        }
+        
+        p.el.style.left = `${p.x}px`;
+        p.el.style.top = `${p.y}px`;
+        p.el.style.width = `${p.size}px`;
+        p.el.style.height = p.isConfetti ? `${p.size * 1.4}px` : `${p.size}px`;
+        p.el.style.opacity = p.opacity;
+        
+        if (p.size <= 1.5 || p.opacity <= 0) {
+          p.el.remove();
+          return false;
+        }
+        return true;
+      });
+      requestAnimationFrame(updateParticles);
+    }
+    requestAnimationFrame(updateParticles);
+
+    // Sparkles helper
+    function spawnTouchSparkle(e) {
+      if (e.target.closest('button') || e.target.closest('label') || e.target.closest('input')) return;
+      spawnParticles(e.clientX, e.clientY, 10, false);
+    }
+
+
+    // --- CONTINUOUS BACKGROUND PETALS FALLING SYSTEM ---
+    const petalLayer = document.getElementById('falling-petals-layer');
+    const petalColors = ["#ff758f", "#ff9db3", "#ffa3b1", "#fbcfe8", "#fda4af"];
+    for (let i = 0; i < 18; i++) {
+      const p = document.createElement('div');
+      p.className = 'absolute rounded-full animate-petal';
+      
+      const left = `${5 + Math.random() * 90}%`;
+      const delay = `${Math.random() * -12}s`;
+      const duration = `${8 + Math.random() * 8}s`;
+      const scale = 0.5 + Math.random() * 0.7;
+      const color = petalColors[Math.floor(Math.random() * petalColors.length)];
+      
+      p.style.left = left;
+      p.style.backgroundColor = color;
+      p.style.animationDelay = delay;
+      p.style.animationDuration = duration;
+      p.style.width = `${scale * 14}px`;
+      p.style.height = `${scale * 20}px`;
+      p.style.borderRadius = "100% 0px 100% 100%";
+      p.style.opacity = "0.55";
+      
+      petalLayer.appendChild(p);
+    }
+
+
+    // --- CHIME SYNTH MUSIC BOX ENGINE ---
+    const melodyNotes = [
+      { f: 261.63, d: 0.35, gap: 0.45 }, { f: 261.63, d: 0.35, gap: 0.45 },
+      { f: 293.66, d: 0.70, gap: 0.80 }, { f: 261.63, d: 0.70, gap: 0.80 },
+      { f: 349.23, d: 0.70, gap: 0.80 }, { f: 329.63, d: 1.30, gap: 1.50 },
+      
+      { f: 261.63, d: 0.35, gap: 0.45 }, { f: 261.63, d: 0.35, gap: 0.45 },
+      { f: 293.66, d: 0.70, gap: 0.80 }, { f: 261.63, d: 0.70, gap: 0.80 },
+      { f: 392.00, d: 0.70, gap: 0.80 }, { f: 349.23, d: 1.30, gap: 1.50 },
+
+      { f: 261.63, d: 0.35, gap: 0.45 }, { f: 261.63, d: 0.35, gap: 0.45 },
+      { f: 523.25, d: 0.70, gap: 0.80 }, { f: 440.00, d: 0.70, gap: 0.80 },
+      { f: 349.23, d: 0.70, gap: 0.80 }, { f: 329.63, d: 0.70, gap: 0.80 },
+      { f: 293.66, d: 1.30, gap: 1.50 },
+
+      { f: 466.16, d: 0.35, gap: 0.45 }, { f: 466.16, d: 0.35, gap: 0.45 },
+      { f: 440.00, d: 0.70, gap: 0.80 }, { f: 349.23, d: 0.70, gap: 0.80 },
+      { f: 392.00, d: 0.70, gap: 0.80 }, { f: 349.23, d: 1.60, gap: 2.20 }
+    ];
+
+    let audioCtx = null;
+    let isPlayingMusic = false;
+    let synthTimeouts = [];
+
+    function updateMusicToggleUI() {
+      const toggleBtn = document.getElementById('music-toggle-btn');
+      const text = document.getElementById('music-btn-text');
+      const mutedIcon = document.getElementById('music-icon-muted');
+      const playingIcon = document.getElementById('music-icon-playing');
+      
+      if (isPlayingMusic) {
+        toggleBtn.classList.replace('bg-white/80', 'bg-[#ff4d6d]/15');
+        toggleBtn.classList.replace('text-rose-500', 'text-[#ff4d6d]');
+        toggleBtn.classList.add('border-[#ff4d6d]/30', 'animate-pulse');
+        text.textContent = "Music Active";
+        mutedIcon.classList.add('hidden');
+        playingIcon.classList.remove('hidden');
+      } else {
+        toggleBtn.classList.replace('bg-[#ff4d6d]/15', 'bg-white/80');
+        toggleBtn.classList.replace('text-[#ff4d6d]', 'text-rose-500');
+        toggleBtn.classList.remove('border-[#ff4d6d]/30', 'animate-pulse');
+        text.textContent = "Music Silent";
+        mutedIcon.classList.remove('hidden');
+        playingIcon.classList.add('hidden');
+      }
+    }
+
+    function toggleManualMusic() {
+      isPlayingMusic = !isPlayingMusic;
+      updateMusicToggleUI();
+      if (isPlayingMusic) {
+        playMelody();
+      } else {
+        stopMelody();
+      }
+    }
+
+    function stopMelody() {
+      synthTimeouts.forEach(clearTimeout);
+      synthTimeouts = [];
+      if (audioCtx && audioCtx.state === "running") {
+        audioCtx.suspend();
+      }
+    }
+
+    function playMelody() {
+      if (!isPlayingMusic) return;
+      
+      if (!audioCtx) {
+        const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtxClass) {
+          audioCtx = new AudioCtxClass();
+        }
+      }
+      
+      if (!audioCtx) return;
+      if (audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
+      
+      synthTimeouts.forEach(clearTimeout);
+      synthTimeouts = [];
+      
+      let nextStart = audioCtx.currentTime;
+      
+      melodyNotes.forEach((note) => {
+        const scheduleDelay = (nextStart - audioCtx.currentTime) * 1000;
+        const noteTimer = setTimeout(() => {
+          if (!audioCtx || audioCtx.state !== "running" || !isPlayingMusic) return;
+          
+          const now = audioCtx.currentTime;
+          
+          // Primary synth tone sine oscillator
+          const osc1 = audioCtx.createOscillator();
+          const gain1 = audioCtx.createGain();
+          osc1.type = "sine";
+          osc1.frequency.setValueAtTime(note.f, now);
+          
+          // Secondary harmonic overtone resonance
+          const osc2 = audioCtx.createOscillator();
+          const gain2 = audioCtx.createGain();
+          osc2.type = "sine";
+          osc2.frequency.setValueAtTime(note.f * 2, now);
+          
+          // Dreamy glassy envelope decay curves
+          gain1.gain.setValueAtTime(0, now);
+          gain1.gain.linearRampToValueAtTime(0.12, now + 0.04);
+          gain1.gain.exponentialRampToValueAtTime(0.0001, now + note.d);
+          
+          gain2.gain.setValueAtTime(0, now);
+          gain2.gain.linearRampToValueAtTime(0.04, now + 0.06);
+          gain2.gain.exponentialRampToValueAtTime(0.0001, now + note.d * 0.7);
+          
+          osc1.connect(gain1);
+          gain1.connect(audioCtx.destination);
+          osc2.connect(gain2);
+          gain2.connect(audioCtx.destination);
+          
+          osc1.start(now);
+          osc1.stop(now + note.d);
+          osc2.start(now);
+          osc2.stop(now + note.d);
+          
+        }, scheduleDelay);
+        
+        synthTimeouts.push(noteTimer);
+        nextStart += note.gap;
+      });
+      
+      // Loop Trigger Scheduling
+      const totalMelodyDuration = melodyNotes.reduce((acc, note) => acc + note.gap, 0);
+      const loopTimer = setTimeout(() => {
+        playMelody();
+      }, totalMelodyDuration * 1000);
+      
+      synthTimeouts.push(loopTimer);
+    }
+
+
+    // --- NAME CUSTOMIZATION INPUTS ---
+    function toggleEditName(show) {
+      const modal = document.getElementById('edit-name-overlay');
+      if (show) {
+        document.getElementById('name-input-field').value = babyName;
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      } else {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+      }
+    }
+
+    function saveCustomName() {
+      const trimmed = document.getElementById('name-input-field').value.trim();
+      if (trimmed) {
+        babyName = trimmed;
+        localStorage.setItem("birthday_baby_name_v2", babyName);
+        initPlaceholders();
+      }
+      toggleEditName(false);
+    }
+
+    function closeLockModal() {
+      document.getElementById('lock-modal-dialog').classList.remove('flex');
+      document.getElementById('lock-modal-dialog').classList.add('hidden');
+    }
+
+
+    // --- ENVELOPE SEED OPEN SLIDE TRANSITION (Screen 1 => Screen 2) ---
+    let envelopeOpening = false;
+
+    function triggerEnvelopeOpen() {
+      const isUnlocked = updateCountdown();
+      if (!isUnlocked) {
+        // Pop warning dialog box when locked
+        const lockModal = document.getElementById('lock-modal-dialog');
+        lockModal.classList.remove('hidden');
+        lockModal.classList.add('flex');
+        return;
+      }
+
+      if (envelopeOpening) return;
+      envelopeOpening = true;
+
+      // Start chime synth automatically upon seal clicks
+      isPlayingMusic = true;
+      updateMusicToggleUI();
+      playMelody();
+
+      const topFlap = document.querySelector('.envelope-top-half');
+      const bottomHalf = document.querySelector('.envelope-bottom-half');
+      const seal = document.getElementById('heart-seal');
+      const card = document.getElementById('sliding-letter-preview');
+
+      // 1. Hide seal
+      seal.style.transition = 'all 0.4s ease-out';
+      seal.style.transform = 'translateY(40px) scale(0)';
+      seal.style.opacity = '0';
+
+      // 2. Open up top flap folder
+      setTimeout(() => {
+        topFlap.style.transition = 'all 0.75s ease-in-out';
+        topFlap.style.transform = 'rotateX(180deg) translateY(-10px)';
+        topFlap.style.zIndex = '5';
+
+        // 3. Rises inner secret card upwards, pull envelope parts away
+        setTimeout(() => {
+          card.style.transition = 'all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+          card.style.transform = 'translateY(-140px) scale(1.05)';
+          card.style.opacity = '1';
+          card.style.zIndex = '25';
+
+          bottomHalf.style.transition = 'all 0.8s ease-in-out';
+          bottomHalf.style.transform = 'translateY(160px)';
+          bottomHalf.style.opacity = '0';
+
+          topFlap.style.transform += ' translateY(-160px)';
+          topFlap.style.opacity = '0';
+
+          // 4. Fade page screen to central Birthday experience canvas
+          setTimeout(() => {
+            const s1 = document.getElementById('screen-1');
+            const s2 = document.getElementById('screen-2');
+            
+            s1.classList.add('opacity-0', 'scale-95', 'blur-sm');
+            
+            setTimeout(() => {
+              s1.classList.add('hidden');
+              s2.classList.remove('hidden');
+              
+              setTimeout(() => {
+                s2.classList.remove('opacity-0', 'scale-95');
+                s2.classList.add('opacity-100', 'scale-100');
+                
+                // Initialize Sequenced Typewriter text instantly
+                triggerTypewriter();
+              }, 40);
+              
+            }, 700);
+
+          }, 1100);
+
+        }, 400);
+
+      }, 400);
+    }
+
+
+    // --- TYPER SEQUENTIAL WRITER CONTROLLER ---
+    let typewriterInterval = null;
+    let typewriterTimeouts = [];
+    let typewriterFinished = false;
+
+    const messageParagraphs = [
+      "Happiest Birthday, {{NAME}}! 🌸",
+      "Sa araw na ito, ikaw lang ang pinakamalaking rason para magpasalamat sa Maykapal. Salamat sa lahat ng yakap, sa pakikinig, at sa walang sawang pagmamahal. Ikaw ang aking pahinga at aking inspirasyon.",
+      "Sana sa pagtanda mo ng isa pang taon, mas maging matapang ka pa sa pag-abot ng mga pangarap mo. Huwag mong kakalimutan na anuman ang mangyari, may isang tao rito na hinding-hindi mapapagod magmahal at sumuporta sa'yo—ako 'yun. Magdiwang ka ngayon dahil deserve mo ang lahat ng magagandang bagay sa mundo.",
+      "Happy birthday, Lovelove ko! Enjoy your day and always remember iloveyouuusomuchhhh"
+    ];
+
+    function triggerTypewriter() {
+      // Clean up previous values
+      clearInterval(typewriterInterval);
+      typewriterTimeouts.forEach(clearTimeout);
+      typewriterTimeouts = [];
+      typewriterFinished = false;
+
+      const container = document.getElementById('sequential-typewriter-container');
+      container.innerHTML = '';
+      
+      const skipBtn = document.getElementById('skip-typing-btn');
+      skipBtn.style.display = 'block';
+
+      // Load nicknames data
+      const actualTexts = messageParagraphs.map(t => t.replace('{{NAME}}', babyName));
+      let currentPIndex = 0;
+
+      function typeNextParagraph() {
+        if (currentPIndex >= actualTexts.length) {
+          typewriterFinished = true;
+          skipBtn.style.display = 'none';
+          return;
+        }
+
+        const fullText = actualTexts[currentPIndex];
+        const chars = Array.from(fullText);
+        let charIndex = 0;
+
+        const pNode = document.createElement('p');
+        if (currentPIndex === 0) {
+          pNode.className = "font-handwritten text-3xl font-semibold text-[#b43e50] text-center py-2 select-none tracking-wider transition-opacity duration-300";
+        } else if (currentPIndex === 3) {
+          pNode.className = "font-handwritten text-2.5xl sm:text-3xl font-bold text-[#b43e50] text-center py-3 select-none leading-relaxed tracking-wide transition-opacity duration-300";
+        } else {
+          pNode.className = "indent-4 leading-relaxed font-normal hover:text-[#800f2f] transition-colors duration-200";
+        }
+
+        const cursor = document.createElement('span');
+        cursor.className = "animate-pulse ml-0.5 inline-block text-rose-400 font-bold";
+        cursor.textContent = "|";
+
+        pNode.appendChild(cursor);
+        container.appendChild(pNode);
+
+        const scroller = document.getElementById('typewriter-parent-scroller');
+
+        typewriterInterval = setInterval(() => {
+          if (charIndex < chars.length) {
+            const piece = chars.slice(0, charIndex + 1).join('');
+            pNode.innerHTML = piece;
+            pNode.appendChild(cursor);
+            charIndex++;
+            scroller.scrollTop = scroller.scrollHeight;
+          } else {
+            clearInterval(typewriterInterval);
+            cursor.remove();
+
+            // Insert spacing separators when in list transition
+            if (currentPIndex < actualTexts.length - 1) {
+              const separationNode = document.createElement('div');
+              separationNode.className = "flex justify-center py-1 select-none";
+              
+              if (currentPIndex === 2) {
+                // bouncing rose icon
+                separationNode.innerHTML = `
+                  <svg class="w-6 h-6 text-rose-500 animate-bounce" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                  </svg>
+                `;
+              } else {
+                // spinning petal star spinner
+                separationNode.innerHTML = `
+                  <svg class="w-4.5 h-4.5 text-rose-400 animate-spin" style="animation-duration: 14s;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 3v18M3 12h18m-3-6L6 18M6 18l12-12"/>
+                  </svg>
+                `;
+              }
+
+              container.appendChild(separationNode);
+              scroller.scrollTop = scroller.scrollHeight;
+
+              const chainTimer = setTimeout(() => {
+                currentPIndex++;
+                typeNextParagraph();
+              }, 450);
+              
+              typewriterTimeouts.push(chainTimer);
+            } else {
+              typewriterFinished = true;
+              skipBtn.style.display = 'none';
+            }
+          }
+        }, 28);
+      }
+
+      typeNextParagraph();
+    }
+
+    function skipTypewriter() {
+      clearInterval(typewriterInterval);
+      typewriterTimeouts.forEach(clearTimeout);
+      typewriterTimeouts = [];
+      
+      typewriterFinished = true;
+      document.getElementById('skip-typing-btn').style.display = 'none';
+
+      const container = document.getElementById('sequential-typewriter-container');
+      container.innerHTML = '';
+
+      const actualTexts = messageParagraphs.map(t => t.replace('{{NAME}}', babyName));
+      actualTexts.forEach((text, i) => {
+        const pElement = document.createElement('p');
+        if (i === 0) {
+          pElement.className = "font-handwritten text-3xl font-semibold text-[#b43e50] text-center py-2 select-none tracking-wider";
+        } else if (i === 3) {
+          pElement.className = "font-handwritten text-2.5xl sm:text-3xl font-bold text-[#b43e50] text-center py-3 select-none leading-relaxed tracking-wide";
+        } else {
+          pElement.className = "indent-4 leading-relaxed font-normal hover:text-[#800f2f] transition-colors duration-200";
+        }
+        pElement.textContent = text;
+        container.appendChild(pElement);
+
+        if (i < actualTexts.length - 1) {
+          const sNode = document.createElement('div');
+          sNode.className = "flex justify-center py-1 select-none";
+          if (i === 2) {
+            sNode.innerHTML = `
+              <svg class="w-6 h-6 text-rose-500 animate-bounce" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+            `;
+          } else {
+            sNode.innerHTML = `
+              <svg class="w-4.5 h-4.5 text-rose-400 animate-spin" style="animation-duration: 14s;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 3v18M3 12h18m-3-6L6 18M6 18l12-12"/>
+              </svg>
+            `;
+          }
+          container.appendChild(sNode);
+        }
+      });
+
+      const scroller = document.getElementById('typewriter-parent-scroller');
+      scroller.scrollTop = scroller.scrollHeight;
+    }
+
+
+    // --- CAKE CANDLE INTERACTIVE BLOW OUT MECHANISM ---
+    let isFlameBlownOut = false;
+
+    function toggleCandleFlame() {
+      isFlameBlownOut = !isFlameBlownOut;
+      const flame = document.getElementById('candle-flame-group');
+      const wishBanner = document.getElementById('wish-banner');
+      const tapHint = document.getElementById('candle-tap-hint');
+      
+      if (isFlameBlownOut) {
+        flame.classList.add('hidden', 'scale-0');
+        wishBanner.classList.remove('hidden');
+        tapHint.classList.add('hidden');
+        
+        // Relational coordinates center calculations for confetti spark
+        const cakeSvg = document.getElementById('birthday-cake-svg');
+        const rect = cakeSvg.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2 - 10;
+        
+        // Massive upward colored confetti spark spray!
+        spawnParticles(centerX, centerY, 75, true);
+      } else {
+        flame.classList.remove('hidden', 'scale-0');
+        wishBanner.classList.add('hidden');
+        tapHint.classList.remove('hidden');
+      }
+    }
+
+    function relightCandleFlame(e) {
+      e.stopPropagation();
+      isFlameBlownOut = false;
+      const flame = document.getElementById('candle-flame-group');
+      const wishBanner = document.getElementById('wish-banner');
+      const tapHint = document.getElementById('candle-tap-hint');
+      
+      flame.classList.remove('hidden', 'scale-0');
+      wishBanner.classList.add('hidden');
+      tapHint.classList.remove('hidden');
+      
+      // Magical spark ignite glow
+      const cakeSvg = document.getElementById('birthday-cake-svg');
+      const rect = cakeSvg.getBoundingClientRect();
+      spawnParticles(rect.left + rect.width / 2, rect.top + 20, 15, false);
+    }
+
+
+    // --- PHOTOGRAPH FILE SELECTION CONTROLLER ---
+    const photoUploader = document.getElementById('photo-uploader-input');
+    photoUploader.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const urlDataPath = event.target.result;
+          loadedPhoto = urlDataPath;
+          try {
+            localStorage.setItem("birthday_baby_photo_v2", urlDataPath);
+          } catch (err) {
+            console.warn("Storage quota size limit exceeded for local photo upload persistence", err);
+          }
+          initPlaceholders();
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function clearCustomPhoto(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      loadedPhoto = null;
+      try {
+        localStorage.removeItem("birthday_baby_photo_v2");
+      } catch {}
+      initPlaceholders();
+    }
+
+
+    // --- EXTRA DELIGHT BLESSING SHUFFLES ---
+    const sweetBlessings = [
+      "You deserve all the sweetness and warm coffee in the world! ☕✨",
+      "If tulips had a soul, they'd want to blossom as beautifully as you do. 🌷",
+      "I am so incredibly proud of the beautiful, resilient human you are! 💖",
+      "May today sprinkle peace into your thoughts and gentle warmth into your chest. 🕊️",
+      "You're my ultimate favorite person in the entire universe. 🌟",
+      "Remember to breathe deeply today—you are perfect, and your efforts are enough. 🌸",
+      "Thank you for existing. The universe is exponentially better with you in it! 💞",
+      "My favorite view of the entire world is seeing you happy and laughing. 🎂👑"
+    ];
+
+    let wishingCount = 0;
+
+    function receiveGiftWish() {
+      wishingCount++;
+      
+      // Spray giant confetti burst across center stage
+      spawnParticles(window.innerWidth / 2, window.innerHeight / 2 - 100, 30, true);
+      
+      const randomBlessing = sweetBlessings[Math.floor(Math.random() * sweetBlessings.length)];
+      
+      document.getElementById('compliment-text').textContent = randomBlessing;
+      document.getElementById('wishes-count').textContent = wishingCount;
+      
+      const drawer = document.getElementById('compliment-drawer-box');
+      drawer.classList.remove('hidden');
+      drawer.classList.add('flex', 'animate-bounce-subtle');
+      
+      setTimeout(() => {
+        drawer.classList.remove('animate-bounce-subtle');
+      }, 1000);
+    }
+
+    function closeComplimentDrawer() {
+      document.getElementById('compliment-drawer-box').classList.add('hidden');
+    }
+
+    function showEnvelopeAgain() {
+      const s1 = document.getElementById('screen-1');
+      const s2 = document.getElementById('screen-2');
+      
+      s2.classList.add('opacity-0', 'scale-95');
+      
+      setTimeout(() => {
+        s2.classList.add('hidden');
+        s1.classList.remove('hidden');
+        
+        setTimeout(() => {
+          s1.classList.remove('opacity-0', 'scale-95', 'blur-sm');
+          
+          // Reset elements
+          envelopeOpening = false;
+          const topFlap = document.querySelector('.envelope-top-half');
+          const bottomHalf = document.querySelector('.envelope-bottom-half');
+          const seal = document.getElementById('heart-seal');
+          const card = document.getElementById('sliding-letter-preview');
+          
+          seal.style.transform = 'translateY(0) scale(1)';
+          seal.style.opacity = '1';
+          
+          topFlap.style.transform = 'rotateX(0deg) translateY(0)';
+          topFlap.style.opacity = '1';
+          topFlap.style.zIndex = '20';
+          
+          bottomHalf.style.transform = 'translateY(0)';
+          bottomHalf.style.opacity = '1';
+          
+          card.style.transform = 'scale(0.75)';
+          card.style.opacity = '0';
+          card.style.zIndex = '10';
+        }, 40);
+        
+      }, 700);
+
+      // Stop melody when envelope folds back
+      stopMelody();
+      isPlayingMusic = false;
+      updateMusicToggleUI();
+      
+      if (isFlameBlownOut) {
+        toggleCandleFlame(); // relight candle flame safely
+      }
+    }
+  </script>
+</body>
+</html>
