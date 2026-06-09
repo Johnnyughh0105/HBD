@@ -96,6 +96,68 @@
     html, body {
       overscroll-behavior: none;
     }
+
+    /* Fixed Layer Positioning and responsive scaling for background tulips */
+    .tulips-left, .tulips-right {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      z-index: 10;
+      opacity: 0.85;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-origin: center center;
+    }
+
+    .tulips-left {
+      left: 10px;
+    }
+
+    .tulips-right {
+      right: 10px;
+    }
+
+    /* Desktop View: large, scaled up and positioned cleanly framing sides of envelope */
+    @media (min-width: 1024px) {
+      .tulips-left, .tulips-right {
+        transform: translateY(-50%) scale(1.4);
+        opacity: 0.95;
+      }
+      .tulips-left {
+        left: 6%;
+      }
+      .tulips-right {
+        right: 6%;
+      }
+    }
+
+    /* Tablet / Small Laptop View: beautiful proportional framing */
+    @media (min-width: 601px) and (max-width: 1023px) {
+      .tulips-left, .tulips-right {
+        transform: translateY(-50%) scale(1.15);
+        opacity: 0.9;
+      }
+      .tulips-left {
+        left: 2%;
+      }
+      .tulips-right {
+        right: 2%;
+      }
+    }
+
+    /* Mobile view: scale down pack closer so they frame Babi and countdown beautifully */
+    @media (max-width: 600px) {
+      .tulips-left, .tulips-right {
+        transform: translateY(-50%) scale(0.95);
+        opacity: 0.88;
+      }
+      .tulips-left {
+        left: -12px;
+      }
+      .tulips-right {
+        right: -12px;
+      }
+    }
   </style>
 </head>
 <body class="relative min-h-screen w-full overflow-x-hidden bg-gradient-to-br from-[#ffe5ec] via-[#fff5f6] to-[#fefaf6] font-sans antialiased text-[#800f2f] select-none">
@@ -125,6 +187,71 @@
 
   <!-- ==================== SCREEN 1: LOCKED ENVELOPE SEED ==================== -->
   <main id="screen-1" class="flex flex-col items-center justify-center min-h-screen w-full px-4 pt-16 pb-20 overflow-visible relative z-20 transition-all duration-700">
+    
+    <!-- Large Corner / Side Tulips Cluster - Left Side Background -->
+    <div class="tulips-left select-none">
+      <div class="flex items-end">
+        <!-- Deep Tulip left (sways) -->
+        <svg class="w-16 h-36 md:w-28 md:h-56 animate-sway-left" viewBox="0 0 120 200" fill="none">
+          <!-- Stem -->
+          <path d="M60 200 C50 140 55 100 60 70" stroke="#7aa78f" stroke-width="6.5" stroke-linecap="round"/>
+          <path d="M57 155 C38 145 20 110 35 85 C42 102 52 125 57 140" fill="#7aa78f" fill-opacity="0.85"/>
+          <!-- Rear Petals -->
+          <path d="M60 72 C32 72 22 25 52 15 C58 40 58 55 60 72" fill="#fbcfd8"/>
+          <path d="M60 72 C88 72 98 25 68 15 C62 40 62 55 60 72" fill="#fbcfd8"/>
+          <!-- Front petal -->
+          <path d="M60 72 C42 72 32 24 60 10 C88 24 78 72 60 72Z" fill="#ff758f"/>
+        </svg>
+
+        <!-- Soft Tulip center (sways reverse) -->
+        <svg class="w-14 h-30 md:w-24 md:h-48 animate-sway-right -ml-8 md:-ml-12" viewBox="0 0 120 200" fill="none">
+          <path d="M60 200 C65 135 60 95 55 65" stroke="#82b396" stroke-width="5" stroke-linecap="round"/>
+          <path d="M56 160 C78 140 88 105 72 85 C64 100 60 118 56 138" fill="#82b396" fill-opacity="0.85"/>
+          <path d="M55 67 C28 67 18 20 48 10 C54 35 54 50 55 67" fill="#fbcfe8"/>
+          <path d="M55 67 C82 67 92 20 62 10 C56 35 56 50 55 67" fill="#fbcfe8"/>
+          <path d="M55 67 C38 67 28 22 55 10 C82 22 72 67 55 67Z" fill="#ffa6c9"/>
+        </svg>
+
+        <!-- Yellow Accent Tulip (smaller, sways left) -->
+        <svg class="w-12 h-24 md:w-18 md:h-36 animate-sway-left -ml-6 md:-ml-10" viewBox="0 0 120 180" fill="none">
+          <path d="M60 180 Q52 115 58 75" stroke="#74a887" stroke-width="4.5" stroke-linecap="round"/>
+          <path d="M58 77 C35 77 28 30 50 20 C55 40 55 55 58 77" fill="#fef3c7"/>
+          <path d="M58 77 C81 77 88 30 66 20 C61 40 61 55 58 77" fill="#fef3c7"/>
+          <path d="M58 77 C42 77 35 34 58 20 C81 34 74 77 58 77Z" fill="#ffd166"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Large Corner / Side Tulips Cluster - Right Side Background -->
+    <div class="tulips-right select-none">
+      <div class="flex items-end scale-x-[-1]">
+        <!-- Deep Tulip left (sways) -->
+        <svg class="w-16 h-36 md:w-28 md:h-56 animate-sway-left" viewBox="0 0 120 200" fill="none">
+          <path d="M60 200 C50 140 55 100 60 70" stroke="#7aa78f" stroke-width="6.5" stroke-linecap="round"/>
+          <path d="M57 155 C38 145 20 110 35 85 C42 102 52 125 57 140" fill="#7aa78f" fill-opacity="0.85"/>
+          <path d="M60 72 C32 72 22 25 52 15 C58 40 58 55 60 72" fill="#fbcfd8"/>
+          <path d="M60 72 C88 72 98 25 68 15 C62 40 62 55 60 72" fill="#fbcfd8"/>
+          <path d="M60 72 C42 72 32 24 60 10 C88 24 78 72 60 72Z" fill="#ff758f"/>
+        </svg>
+
+        <!-- Soft Tulip center (sways reverse) -->
+        <svg class="w-14 h-30 md:w-24 md:h-48 animate-sway-right -ml-8 md:-ml-12" viewBox="0 0 120 200" fill="none">
+          <path d="M60 200 C65 135 60 95 55 65" stroke="#82b396" stroke-width="5" stroke-linecap="round"/>
+          <path d="M56 160 C78 140 88 105 72 85 C64 100 60 118 56 138" fill="#82b396" fill-opacity="0.85"/>
+          <path d="M55 67 C28 67 18 20 48 10 C54 35 54 50 55 67" fill="#fbcfe8"/>
+          <path d="M55 67 C82 67 92 20 62 10 C56 35 56 50 55 67" fill="#fbcfe8"/>
+          <path d="M55 67 C38 67 28 22 55 10 C82 22 72 67 55 67Z" fill="#ffa6c9"/>
+        </svg>
+
+        <!-- Yellow Accent Tulip (smaller, sways left) -->
+        <svg class="w-12 h-24 md:w-18 md:h-36 animate-sway-left -ml-6 md:-ml-10" viewBox="0 0 120 180" fill="none">
+          <path d="M60 180 Q52 115 58 75" stroke="#74a887" stroke-width="4.5" stroke-linecap="round"/>
+          <path d="M58 77 C35 77 28 30 50 20 C55 40 55 55 58 77" fill="#fef3c7"/>
+          <path d="M58 77 C81 77 88 30 66 20 C61 40 61 55 58 77" fill="#fef3c7"/>
+          <path d="M58 77 C42 77 35 34 58 20 C81 34 74 77 58 77Z" fill="#ffd166"/>
+        </svg>
+      </div>
+    </div>
     
     <!-- Recipient Name Header Section -->
     <div class="text-center z-40 relative mb-8">
