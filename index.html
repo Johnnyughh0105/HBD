@@ -667,8 +667,8 @@
   <!-- ==================== VANILLA JAVASCRIPT ANIMATIONS & SEQUENCERS ==================== -->
   <script>
     // --- REALTIME TIME-LOCK DATABASE SETTINGS ---
-    // Target date set in June 26, 2026, 00:00:00 Local/UTC Time
-    const targetDate = new Date("2026-06-26T00:00:00");
+    // Target date set in June 26, 2026, 00:00:00 Local/UTC Time (Month is 0-indexed: 5 is June)
+    const targetDate = new Date(2026, 5, 26, 0, 0, 0);
     let isBypassed = false;
 
     // Direct Bypass Link param option checking
@@ -679,11 +679,21 @@
       if (devHint) devHint.classList.remove("hidden");
     }
 
-    // Recover Customizable Name from localStorage
-    let babyName = localStorage.getItem("birthday_baby_name_v2") || "baby";
+    // Recover Customizable Name from localStorage safely
+    let babyName = "baby";
+    try {
+      babyName = localStorage.getItem("birthday_baby_name_v2") || "baby";
+    } catch (e) {
+      console.warn("Storage access is blocked:", e);
+    }
     
-    // Recover Customizable Image from localStorage
-    let loadedPhoto = localStorage.getItem("birthday_baby_photo_v2") || null;
+    // Recover Customizable Image from localStorage safely
+    let loadedPhoto = null;
+    try {
+      loadedPhoto = localStorage.getItem("birthday_baby_photo_v2") || null;
+    } catch (e) {
+      console.warn("Storage access is blocked:", e);
+    }
 
     // Countdown loop calculation logic
     function updateCountdown() {
@@ -1043,7 +1053,11 @@
       const trimmed = document.getElementById('name-input-field').value.trim();
       if (trimmed) {
         babyName = trimmed;
-        localStorage.setItem("birthday_baby_name_v2", babyName);
+        try {
+          localStorage.setItem("birthday_baby_name_v2", babyName);
+        } catch (e) {
+          console.warn("localStorage is not available for writing babyName:", e);
+        }
         initPlaceholders();
       }
       toggleEditName(false);

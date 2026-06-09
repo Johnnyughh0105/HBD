@@ -514,8 +514,8 @@ export default function App() {
   }>>([]);
   const [sparkleCount, setSparkleCount] = useState(0);
 
-  // Time-lock Configuration: June 26, 2026, 12:00 AM Local Time
-  const targetDate = useRef(new Date("2026-06-26T00:00:00"));
+  // Time-lock Configuration: June 26, 2026, 12:00 AM Local Time (Month is 0-indexed: 5 is June)
+  const targetDate = useRef(new Date(2026, 5, 26, 0, 0, 0));
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0, isExpired: false });
   const [showLockModal, setShowLockModal] = useState(false);
   const [bypassLock, setBypassLock] = useState(() => {
