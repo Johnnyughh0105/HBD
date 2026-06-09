@@ -1,0 +1,6 @@
+{
+  "name": "Tulip Birthday Mail",
+  "description": "An interactive, elegant birthday website with a customizable tulip aesthetic, envelope-unveiling flow, interactive card, and personalized elements.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
